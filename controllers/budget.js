@@ -17,7 +17,7 @@ export const createBudget = async (req, res) => {
             $push: { budgets: newBudget}
         })
 
-        return res.json({newBudget})
+        return res.json({data: {newBudget}})
     } catch (error) {
         res.json({ message: 'Something goes wrong!', error: error})
     }
@@ -64,7 +64,7 @@ export const addMemberToBudget = async(req, res) => {
       }
 
 
-      res.json({message: "User added to budget!", response: {userid: req.userId, user_id: user, budget: budget}});
+      res.json({message: "User added to budget!"});
       } catch (error) {
         res.json({message: "Something goes wrong!", errors: error});
       }
@@ -75,7 +75,7 @@ export const getBudgets = async(req, res) => {
 
     const list = await Budget.find({members: {$in: req.userId}});
 
-    res.json(list);
+    res.json({data: list});
   } catch (error) {
     res.json({message: "Something goes wrong!", errors: error});
   }

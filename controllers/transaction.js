@@ -14,7 +14,7 @@ export const createTransaction = async (req, res) => {
 
         await newTransaction.save();
 
-        return res.json({newTransaction})
+        return res.json({data: newTransaction})
     } catch (error) {
         res.json({ message: 'Something goes wrong!', error: error})
     }
@@ -37,7 +37,7 @@ export const getTransactions = async (req, res) => {
 
     const list = await Transaction.find({budget: {$in: id}, createdAt: {$gte: start, $lte: end}});
 
-    res.json(list);
+    res.json({data: list});
   } catch (error) {
     res.json({message: "Something goes wrong!", errors: error});
   }

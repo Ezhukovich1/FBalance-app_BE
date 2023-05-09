@@ -20,7 +20,7 @@ export const createCategory = async (req, res) => {
             console.log(error)
         }
 
-        res.json({category: newCategory});
+        res.json({data: {category: newCategory}});
     } catch (error) {
         res.json({message: "Something goes wrong!"})
     }
@@ -37,7 +37,7 @@ export const getCategories = async(req, res) => {
           budget.categories.map((category) => Category.findById(category))
         )
     
-        res.json(list)
+        res.json({data: list})
       } catch (error) {
         res.json({message: "Something goes wrong!", errors: error});
       }

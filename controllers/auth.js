@@ -30,8 +30,10 @@ export const register = async (req, res) => {
         await newUser.save();
 
         res.json({
-            newUser,
-            token,
+            data: {
+              newUser,
+              token,
+            },
             message: "Registration is success!"
         })
 
@@ -65,7 +67,10 @@ export const login = async (req, res) => {
         }, process.env.JWT_SECRET, {expiresIn: '30d'});
 
         res.json({
-            token, user, message: 'Sign in successfully'
+            data: {
+              user,
+              token,
+            }, message: 'Sign in successfully'
         })
     } catch (error) {
         res.json({message: 'Auth error'});
@@ -88,7 +93,7 @@ export const getMe = async (req, res) => {
         }, process.env.JWT_SECRET, {expiresIn: '30d'});
 
         res.json({
-            user, token
+            data: {user, token}
         })
 
     } catch (error) {
