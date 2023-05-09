@@ -18,7 +18,7 @@ export const register = async (req, res) => {
         const hash = bcrypt.hashSync(password, salt);
 
         const newUser = new User({
-            username,
+            username: username.toLowerCase(),
             phone,
             password: hash
         });
@@ -46,7 +46,7 @@ export const login = async (req, res) => {
     try {
         const {username, password} = req.body;
 
-        const user = await User.findOne({username});
+        const user = await User.findOne({username: username.toLowerCase()});
 
         if(!user) {
             return res.json({
