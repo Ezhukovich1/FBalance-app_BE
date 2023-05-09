@@ -11,7 +11,7 @@ export const register = async (req, res) => {
         const isUsed = await User.findOne({username});
 
         if(isUsed) {
-            return res.json({message: 'Current username is exist'});
+            return res.status(404).json({message: 'Current username is exist'});
         }
 
         const salt = bcrypt.genSaltSync();
@@ -38,43 +38,45 @@ export const register = async (req, res) => {
         })
 
     } catch (error) {
-       res.json({message: 'Error in registration'})
+       res.status(500).json({message: 'Error in registration'})
     }
 };
 // Login
 export const login = async (req, res) => {
-    try {
-        const {username, password} = req.body;
+  
+  try {
 
-        const user = await User.findOne({username: username.toLowerCase()});
+    const {username, password} = req.body;
 
-        if(!user) {
-            return res.json({
-                message: 'User is not exist.'
-            });
-        }
-
-        const isPasswordCorrect = await bcrypt.compare(password, user.password);
-
-        if(!isPasswordCorrect) {
-            return res.json({
-                message: 'Password or username is not correct.'
-            })
-        }
-
-        const token = jwt.sign({
-            id: user._id
-        }, process.env.JWT_SECRET, {expiresIn: '30d'});
-
-        res.json({
-            data: {
-              user,
-              token,
-            }, message: 'Sign in successfully'
-        })
-    } catch (error) {
-        res.json({message: 'Auth error'});
+    const user = await User.findOne({username: username.toLowerCase()});
+  
+    if(!user) {
+        return res.status(404).json({
+            message: 'User is not exist.'
+        });
     }
+
+      const isPasswordCorrect = await bcrypt.compare(password, user.password);
+
+      if(!isPasswordCorrect) {
+          return res.satus(404).json({
+              message: 'Password or username is not correct.'
+          })
+      }
+
+      const token = jwt.sign({
+          id: user._id
+      }, process.env.JWT_SECRET, {expiresIn: '30d'});
+
+      res.json({
+          data: {
+            user,
+            token,
+          }, message: 'Sign in successfully'
+      })
+  } catch (error) {
+      res.status(500).json({message: 'Auth error'});
+  }
 };
 
 // Get me
@@ -83,7 +85,7 @@ export const getMe = async (req, res) => {
         const user = await User.findById(req.userId);
 
         if(!user) {
-            return res.json({
+            return res.status(404).json({
                 message: 'User is not exist.'
             });
         }
@@ -98,6 +100,6 @@ export const getMe = async (req, res) => {
 
     } catch (error) {
         console.log(error);
-        res.json({message: "Access denied"})
+        res.status(401).json({message: "Access denied"})
     }
 };
